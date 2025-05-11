@@ -258,7 +258,7 @@ func monthlyDate(date time.Time, unit string, day int, weekday string, weekdayN 
 	if unit == "d" {
 
 		if day > 0 {
-			date = time.Date(date.Year(), date.Month(), day, 0, 0, 0, 0, time.UTC)
+			date = time.Date(date.Year(), date.Month(), day, 0, 0, 0, 0, time.Local)
 		} else if day < 0 {
 			date = lastDayOfMonth(date).AddDate(0, 0, day+1)
 		}
@@ -269,7 +269,7 @@ func monthlyDate(date time.Time, unit string, day int, weekday string, weekdayN 
 
 		if weekdayN > 0 {
 			direction = "next"
-			date = time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.UTC)
+			date = time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local)
 			date = dateOfWeekday(date, weekday, direction).AddDate(0, 0, (weekdayN-1)*7)
 		} else {
 			direction = "previous"
@@ -282,5 +282,5 @@ func monthlyDate(date time.Time, unit string, day int, weekday string, weekdayN 
 }
 
 func lastDayOfMonth(date time.Time) time.Time {
-	return time.Date(date.Year(), date.Month()+1, 1, 0, 0, 0, 0, time.UTC).AddDate(0, 0, -1)
+	return time.Date(date.Year(), date.Month()+1, 1, 0, 0, 0, 0, time.Local).AddDate(0, 0, -1)
 }
