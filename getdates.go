@@ -155,13 +155,15 @@ func referenceDateMode(date time.Time, end time.Time, unit string, weekday strin
 	// Go forward or backward from reference date
 	if n != 0 {
 		for range n {
-			fmt.Println(date.Format("2006-01-02 Mon"))
+			// fmt.Println(date.Format("2006-01-02 Mon"))
+			fmt.Println(date.Unix())
 			date = date.AddDate(0, 0, days)
 		}
 	} else {
 		if date.Compare(end) < 1 {
 			for date.Compare(end) < 1 {
-				fmt.Println(date.Format("2006-01-02 Mon"))
+				// fmt.Println(date.Format("2006-01-02 Mon"))
+				fmt.Println(date.Unix())
 				date = date.AddDate(0, 0, days)
 			}
 		} else if date.Compare(end) >= 0 {
@@ -170,7 +172,8 @@ func referenceDateMode(date time.Time, end time.Time, unit string, weekday strin
 				return
 			}
 			for date.Compare(end) >= 0 {
-				fmt.Println(date.Format("2006-01-02 Mon"))
+				// fmt.Println(date.Format("2006-01-02 Mon"))
+				fmt.Println(date.Unix())
 				date = date.AddDate(0, 0, -days)
 			}
 		}
@@ -201,7 +204,8 @@ func monthlyMode(date time.Time, end time.Time, unit string, n int, day int, wee
 			month := date.Month()
 			date = monthlyDate(date, unit, day, weekday, weekdayN)
 			if date.Month() == month {
-				fmt.Println(date.Format("2006-01-02 Mon"))
+				// fmt.Println(date.Format("2006-01-02 Mon"))
+				fmt.Println(date.Unix())
 			} else {
 				// ISSUE: related to the two above issues
 				if day > 0 {
@@ -220,7 +224,8 @@ func monthlyMode(date time.Time, end time.Time, unit string, n int, day int, wee
 		// ISSUE: problems occur if -kn is greater than 4 or less than -4
 		for date.Compare(end) <= 0 {
 			date = monthlyDate(date, unit, day, weekday, weekdayN)
-			fmt.Println(date.Format("2006-01-02 Mon"))
+			// fmt.Println(date.Format("2006-01-02 Mon"))
+			fmt.Println(date.Unix())
 			for range interval {
 				date = lastDayOfMonth(date).AddDate(0, 0, 1)
 			}
