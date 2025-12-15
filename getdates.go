@@ -203,7 +203,7 @@ func main() {
 		unit = "k"
 	}
 
-	// Encapsulate data in instance of dateSeries type
+	// Store data in dateSeries type
 	s := dateSeries{
 		start:    startTime,
 		end:      endTime,
@@ -214,7 +214,7 @@ func main() {
 		mn:       *mn,
 	}
 
-	// Select reference date or monthly mode, and output format
+	// Select reference date or monthly mode, output format
 	if mode == "r" {
 		if *h == true {
 			for _, value := range s.referenceDateMode() {
