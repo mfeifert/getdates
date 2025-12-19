@@ -7,6 +7,17 @@ import (
 	"time"
 )
 
+// type dateSeries struct {
+// 	start    time.Time
+// 	end      time.Time
+// 	n        int
+// 	days     int
+// 	weeks    int
+// 	weekday  string
+// 	weekdayn int
+// 	interval int
+// }
+
 type dateSeries struct {
 	start    time.Time
 	end      time.Time
