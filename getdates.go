@@ -31,7 +31,11 @@ type dateSeries struct {
 // ================================END=OF=MONTH================================
 
 func endOfMonth(d time.Time) time.Time {
-	return time.Date(d.Year(), d.Month()+1, 1, 0, 0, 0, 0, time.Local).AddDate(0, 0, -1)
+	year := d.Year()
+	month := d.Month() + 1
+	date := time.Date(year, month, 1, 0, 0, 0, 0, time.Local)
+	date = date.AddDate(0, 0, -1)
+	return date
 }
 
 // ===============================DATE=OF=WEEKDAY==============================
