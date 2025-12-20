@@ -188,9 +188,6 @@ func (s dateSeries) monthlyMode() []time.Time {
 
 func main() {
 
-	// mode can be "r" or "m"
-	mode := os.Args[1]
-
 	// Parse flags
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	start := flag.String("s", string(time.Now().Format(time.DateOnly)), "Start date")
@@ -230,6 +227,7 @@ func main() {
 	}
 
 	// Select reference date or monthly mode, output format
+	mode := os.Args[1]
 	if mode == "r" {
 		if *h == true {
 			for _, value := range s.referenceDateMode() {
