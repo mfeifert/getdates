@@ -15,7 +15,7 @@ import (
 // 	weeks    int
 // 	weekday  string
 // 	weekdayn int
-// 	interval int
+// 	months   int
 // }
 
 type dateSeries struct {
@@ -201,6 +201,19 @@ func main() {
 	h := flag.Bool("h", false, "Human readable output")
 	flag.CommandLine.Parse(os.Args[2:])
 
+	// Parse flags
+	// flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	// start := flag.String("s", string(time.Now().Format(time.DateOnly)), "Start date")
+	// end := flag.String("e", *start, "End date")
+	// n := flag.Int("n", 0, "Number of repetitions")
+	// days := flag.Int("d", 0, "Days")
+	// weeks := flag.Int("w", 0, "Weeks")
+	// weekday := flag.String("k", "", "Weekday")
+	// weekdayn := flag.Int("kn", 1, "Weekday number")
+	// months := flag.Int("i", 1, "Months per repetition (monthly mode only)")
+	// h := flag.Bool("h", false, "Human readable output")
+	// flag.CommandLine.Parse(os.Args[2:])
+
 	// Parse start and end dates from command line flags
 	startTime, _ := time.Parse(time.DateOnly, *start)
 	endTime, _ := time.Parse(time.DateOnly, *end)
@@ -225,6 +238,18 @@ func main() {
 		weekday:  *weekday,
 		mn:       *mn,
 	}
+
+	// Store data in dateSeries type
+	// s := dateSeries{
+	// 	start:    startTime,
+	// 	end:      endTime,
+	// 	n:        *n,
+	// 	days:     *days,
+	// 	weeks:    *weeks,
+	// 	weekday:  *weekday,
+	// 	weekdayn: *weekdayn,
+	// 	months:   *months,
+	// }
 
 	// Select reference date or monthly mode, output format
 	mode := os.Args[1]
