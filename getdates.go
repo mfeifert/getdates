@@ -12,7 +12,6 @@ import (
 // 	end      time.Time
 // 	n        int
 // 	days     int
-// 	weeks    int
 // 	weekday  string
 // 	weekdayn int
 // 	months   int
@@ -207,7 +206,6 @@ func main() {
 	// end := flag.String("e", *start, "End date")
 	// n := flag.Int("n", 0, "Number of repetitions")
 	// days := flag.Int("d", 0, "Days")
-	// weeks := flag.Int("w", 0, "Weeks")
 	// weekday := flag.String("k", "", "Weekday")
 	// weekdayn := flag.Int("kn", 1, "Weekday number")
 	// months := flag.Int("i", 1, "Months per repetition (monthly mode only)")
@@ -245,7 +243,6 @@ func main() {
 	// 	end:      endTime,
 	// 	n:        *n,
 	// 	days:     *days,
-	// 	weeks:    *weeks,
 	// 	weekday:  *weekday,
 	// 	weekdayn: *weekdayn,
 	// 	months:   *months,
