@@ -7,24 +7,14 @@ import (
 	"time"
 )
 
-// type dateSeries struct {
-// 	start    time.Time
-// 	end      time.Time
-// 	n        int
-// 	days     int
-// 	weekday  string
-// 	weekdayn int
-// 	months   int
-// }
-
 type dateSeries struct {
 	start    time.Time
 	end      time.Time
 	n        int
-	interval int
-	unit     string
-	mn       int
+	days     int
 	weekday  string
+	weekdayn int
+	months   int
 }
 
 // ================================END=OF=MONTH================================
@@ -64,24 +54,24 @@ func dateOfWeekday(date time.Time, weekday string, direction int) time.Time {
 
 // =================================MONTHLY=DATE===============================
 
-func monthlyDate(date time.Time, unit string, mn int, weekday string) time.Time {
+func monthlyDate(date time.Time, s dateSeries) time.Time {
 
-	if unit == "d" {
+	if s.days != 0 {
 
-		if mn > 0 {
-			date = time.Date(date.Year(), date.Month(), mn, 0, 0, 0, 0, time.Local)
+		if s.days > 0 {
+			date = time.Date(date.Year(), date.Month(), s.days, 0, 0, 0, 0, time.Local)
 		} else {
-			date = endOfMonth(date).AddDate(0, 0, mn+1)
+			date = endOfMonth(date).AddDate(0, 0, s.days+1)
 		}
 
-	} else if unit == "k" {
+	} else {
 
-		if mn > 0 {
+		if s.weekdayn > 0 {
 			date = time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local)
-			date = dateOfWeekday(date, weekday, mn).AddDate(0, 0, (mn-1)*7)
+			date = dateOfWeekday(date, s.weekday, s.weekdayn).AddDate(0, 0, (s.weekdayn-1)*7)
 		} else {
 			date = endOfMonth(date)
-			date = dateOfWeekday(date, weekday, mn).AddDate(0, 0, (mn+1)*7)
+			date = dateOfWeekday(date, s.weekday, s.weekdayn).AddDate(0, 0, (s.weekdayn+1)*7)
 		}
 	}
 
@@ -95,23 +85,18 @@ func (s dateSeries) referenceDateMode() []time.Time {
 	date := s.start
 	var dates []time.Time
 
-	// Adjust interval if unit is weeks
-	if s.unit == "w" {
-		s.interval = s.interval * 7
-	}
-
 	// Use -n or -e flag
 	if s.n != 0 {
 		// -n
 		for range s.n {
 			dates = append(dates, date)
-			date = date.AddDate(0, 0, s.interval)
+			date = date.AddDate(0, 0, s.days)
 		}
 	} else if s.end != s.start {
 		// -e
 		for date.Compare(s.end) < 1 {
 			dates = append(dates, date)
-			date = date.AddDate(0, 0, s.interval)
+			date = date.AddDate(0, 0, s.days)
 		}
 	}
 
@@ -124,46 +109,49 @@ func (s dateSeries) monthlyMode() []time.Time {
 
 	date := s.start
 	var dates []time.Time
+	var mn int
 
 	// Use -n or -e flag
 	if s.n != 0 {
 
 		// -n -d
-		if s.unit == "d" {
-			if s.mn > 0 && date.Day() > s.mn {
-				// -mn is positive
+		if s.days != 0 {
+			if s.days > 0 && date.Day() > s.days {
+				// -d is positive
 				date = date.AddDate(0, 1, 0)
 
-			} else if s.mn < 0 && date.Day() > endOfMonth(date).AddDate(0, 0, s.mn).Day() {
-				// -mn is negative
+			} else if s.days < 0 && date.Day() > endOfMonth(date).AddDate(0, 0, s.days).Day() {
+				// -d is negative
 				date = date.AddDate(0, 1, 0)
 			}
+			mn = s.days
 		}
 
 		// -n -k
-		if s.unit == "k" {
-			if date.Day() > monthlyDate(date, s.unit, s.mn, s.weekday).Day() {
+		if s.weekday != "" {
+			if date.Day() > monthlyDate(date, s).Day() {
 				date = date.AddDate(0, 1, 0)
 			}
+			mn = s.weekdayn
 		}
 
 		// -n
 		for range s.n {
 
 			month := date.Month()
-			date = monthlyDate(date, s.unit, s.mn, s.weekday)
+			date = monthlyDate(date, s)
 
 			if date.Month() == month {
 				dates = append(dates, date)
 			} else {
-				if s.mn > 0 {
+				if mn > 0 {
 					date = date.AddDate(0, -1, 0)
-				} else if s.mn < 0 {
+				} else if mn < 0 {
 					date = date.AddDate(0, 1, 0)
 				}
 			}
 
-			for range s.interval {
+			for range s.months {
 				date = endOfMonth(date).AddDate(0, 0, 1)
 			}
 		}
@@ -172,9 +160,9 @@ func (s dateSeries) monthlyMode() []time.Time {
 
 		// -e
 		for date.Compare(s.end) <= 0 {
-			date = monthlyDate(date, s.unit, s.mn, s.weekday)
+			date = monthlyDate(date, s)
 			dates = append(dates, date)
-			for range s.interval {
+			for range s.months {
 				date = endOfMonth(date).AddDate(0, 0, 1)
 			}
 		}
@@ -209,10 +197,7 @@ func main() {
 	endFlags := 0
 	flag.CommandLine.Visit(func(f *flag.Flag) {
 		switch f.Name {
-		case "w":
-			days = weeks * 7
-			unitFlags++
-		case "d", "k":
+		case "d", "w", "k":
 			unitFlags++
 		case "e", "n":
 			endFlags++
@@ -220,9 +205,14 @@ func main() {
 	})
 	if unitFlags > 1 {
 		fmt.Println("Only one of -d, -w, or -k may be used.\n")
+		os.Exit(1)
 	}
 	if endFlags > 1 {
 		fmt.Println("Only one of -e or -n may be used.\n")
+		os.Exit(1)
+	}
+	if *weeks != 0 {
+		*days = *weeks * 7
 	}
 
 	// Store data in dateSeries type
