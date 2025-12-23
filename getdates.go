@@ -192,38 +192,37 @@ func main() {
 	start := flag.String("s", string(time.Now().Format(time.DateOnly)), "Start date")
 	end := flag.String("e", *start, "End date")
 	n := flag.Int("n", 0, "Number of repetitions")
-	interval := flag.Int("i", 1, "Interval per repetition")
-	days := flag.Bool("d", false, "Days")
-	weeks := flag.Bool("w", false, "Weeks")
-	weekday := flag.String("k", "", "Which weekday")
-	mn := flag.Int("mn", 1, "Number of day or weekday in monthly mode")
+	days := flag.Int("d", 0, "Days")
+	weeks := flag.Int("w", 0, "Weeks")
+	weekday := flag.String("k", "", "Weekday")
+	weekdayn := flag.Int("kn", 0, "Weekday number")
+	months := flag.Int("i", 1, "Months per repetition (monthly mode only)")
 	h := flag.Bool("h", false, "Human readable output")
 	flag.CommandLine.Parse(os.Args[2:])
-
-	// Parse flags
-	// flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	// start := flag.String("s", string(time.Now().Format(time.DateOnly)), "Start date")
-	// end := flag.String("e", *start, "End date")
-	// n := flag.Int("n", 0, "Number of repetitions")
-	// days := flag.Int("d", 0, "Days")
-	// weekday := flag.String("k", "", "Weekday")
-	// weekdayn := flag.Int("kn", 1, "Weekday number")
-	// months := flag.Int("i", 1, "Months per repetition (monthly mode only)")
-	// h := flag.Bool("h", false, "Human readable output")
-	// flag.CommandLine.Parse(os.Args[2:])
 
 	// Parse start and end dates from command line flags
 	startTime, _ := time.Parse(time.DateOnly, *start)
 	endTime, _ := time.Parse(time.DateOnly, *end)
 
-	// Select unit (days, weeks, weekday)
-	var unit string
-	if *days == true {
-		unit = "d"
-	} else if *weeks == true {
-		unit = "w"
-	} else if *weekday != "" {
-		unit = "k"
+	// Input validation
+	unitFlags := 0
+	endFlags := 0
+	flag.CommandLine.Visit(func(f *flag.Flag) {
+		switch f.Name {
+		case "w":
+			days = weeks * 7
+			unitFlags++
+		case "d", "k":
+			unitFlags++
+		case "e", "n":
+			endFlags++
+		}
+	})
+	if unitFlags > 1 {
+		fmt.Println("Only one of -d, -w, or -k may be used.\n")
+	}
+	if endFlags > 1 {
+		fmt.Println("Only one of -e or -n may be used.\n")
 	}
 
 	// Store data in dateSeries type
@@ -231,22 +230,11 @@ func main() {
 		start:    startTime,
 		end:      endTime,
 		n:        *n,
-		interval: *interval,
-		unit:     unit,
+		days:     *days,
 		weekday:  *weekday,
-		mn:       *mn,
+		weekdayn: *weekdayn,
+		months:   *months,
 	}
-
-	// Store data in dateSeries type
-	// s := dateSeries{
-	// 	start:    startTime,
-	// 	end:      endTime,
-	// 	n:        *n,
-	// 	days:     *days,
-	// 	weekday:  *weekday,
-	// 	weekdayn: *weekdayn,
-	// 	months:   *months,
-	// }
 
 	// Select reference date or monthly mode, output format
 	mode := os.Args[1]
