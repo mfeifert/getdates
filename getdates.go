@@ -203,12 +203,12 @@ func main() {
 			endFlags++
 		}
 	})
-	if unitFlags > 1 {
-		fmt.Println("Only one of -d, -w, or -k may be used.")
+	if unitFlags != 1 {
+		fmt.Println("One of -d, -w, or -k must be used.")
 		os.Exit(1)
 	}
-	if endFlags > 1 {
-		fmt.Println("Only one of -e or -n may be used.")
+	if endFlags != 1 {
+		fmt.Println("One of -e or -n must be used.")
 		os.Exit(1)
 	}
 	if *weeks != 0 {
