@@ -22,8 +22,7 @@ type dateSeries struct {
 func endOfMonth(d time.Time) time.Time {
 	year := d.Year()
 	month := d.Month() + 1
-	date := time.Date(year, month, 1, 0, 0, 0, 0, time.Local)
-	date = date.AddDate(0, 0, -1)
+	date := time.Date(year, month, 0, 0, 0, 0, 0, time.Local)
 	return date
 }
 
