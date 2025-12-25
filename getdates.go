@@ -29,7 +29,7 @@ func endOfMonth(d time.Time) time.Time {
 
 // ===============================DATE=OF=WEEKDAY==============================
 
-func dateOfWeekday(date time.Time, weekday string, direction int) time.Time {
+func dateOfWeekday(date time.Time, weekday string, weekdayn int) time.Time {
 
 	weekdays := map[string]time.Weekday{
 		"Sun": time.Sunday,
@@ -41,7 +41,7 @@ func dateOfWeekday(date time.Time, weekday string, direction int) time.Time {
 		"Sat": time.Saturday,
 	}
 
-	if direction >= 0 {
+	if weekdayn >= 0 {
 		diff := (int(weekdays[weekday]) - int(date.Weekday()) + 7) % 7
 		date = date.AddDate(0, 0, diff)
 	} else {
