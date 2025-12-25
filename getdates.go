@@ -68,10 +68,12 @@ func monthlyDate(date time.Time, s dateSeries) time.Time {
 
 		if s.weekdayn > 0 {
 			date = time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local)
-			date = dateOfWeekday(date, s.weekday, s.weekdayn).AddDate(0, 0, (s.weekdayn-1)*7)
+			date = dateOfWeekday(date, s.weekday, s.weekdayn)
+			date = date.AddDate(0, 0, (s.weekdayn-1)*7)
 		} else {
 			date = endOfMonth(date)
-			date = dateOfWeekday(date, s.weekday, s.weekdayn).AddDate(0, 0, (s.weekdayn+1)*7)
+			date = dateOfWeekday(date, s.weekday, s.weekdayn)
+			date = date.AddDate(0, 0, (s.weekdayn+1)*7)
 		}
 	}
 
