@@ -106,24 +106,19 @@ func (s dateSeries) monthlyMode() []time.Time {
 
 	if s.n != 0 {
 		// -n
-		if s.days != 0 {
-			// -d
-			if s.days > 0 && date.Day() > s.days {
-				// -d is positive
-				date = date.AddDate(0, 1, 0)
-				mn = 1
-			} else if s.days < 0 && date.Day() > endOfMonth(date).AddDate(0, 0, s.days).Day() {
-				// -d is negative
-				date = date.AddDate(0, 1, 0)
-				mn = -1
-			}
+		if s.days > 0 && s.days < date.Day() {
+			// -d positive
+			mn = 1
+		} else if s.days < 0 && endOfMonth(date).AddDate(0, 0, s.days).Day() < date.Day() {
+			// -d negative
+			mn = -1
 		} else {
 			// -k
 			if date.Day() > monthlyDate(date, s).Day() {
-				date = date.AddDate(0, 1, 0)
 				mn = 1
 			}
 		}
+		date = date.AddDate(0, 1, 0)
 		for range s.n {
 			month := date.Month()
 			date = monthlyDate(date, s)
