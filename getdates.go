@@ -213,27 +213,23 @@ func main() {
 		months:   *months,
 	}
 
-	// Select reference date or monthly mode, output format
+	// Select reference date or monthly mode
 	mode := os.Args[1]
+	var dates []time.Time
 	if mode == "r" {
-		if *h == true {
-			for _, date := range s.referenceDateMode() {
-				fmt.Println(date.Format("2006-01-02 Mon"))
-			}
-		} else {
-			for _, date := range s.referenceDateMode() {
-				fmt.Println(date.Unix())
-			}
-		}
+		dates = s.referenceDateMode()
 	} else if mode == "m" {
-		if *h == true {
-			for _, date := range s.monthlyMode() {
-				fmt.Println(date.Format("2006-01-02 Mon"))
-			}
-		} else {
-			for _, date := range s.monthlyMode() {
-				fmt.Println(date.Unix())
-			}
+		dates = s.monthlyMode()
+	}
+
+	// Select output format
+	if *h == true {
+		for _, date := range dates {
+			fmt.Println(date.Format("2006-01-02 Mon"))
+		}
+	} else {
+		for _, date := range dates {
+			fmt.Println(date.Unix())
 		}
 	}
 }
