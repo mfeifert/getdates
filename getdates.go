@@ -217,22 +217,22 @@ func main() {
 	mode := os.Args[1]
 	if mode == "r" {
 		if *h == true {
-			for _, value := range s.referenceDateMode() {
-				fmt.Println(value.Format("2006-01-02 Mon"))
+			for _, date := range s.referenceDateMode() {
+				fmt.Println(date.Format("2006-01-02 Mon"))
 			}
 		} else {
-			for _, value := range s.referenceDateMode() {
-				fmt.Println(value.Unix())
+			for _, date := range s.referenceDateMode() {
+				fmt.Println(date.Unix())
 			}
 		}
 	} else if mode == "m" {
 		if *h == true {
-			for _, value := range s.monthlyMode() {
-				fmt.Println(value.Format("2006-01-02 Mon"))
+			for _, date := range s.monthlyMode() {
+				fmt.Println(date.Format("2006-01-02 Mon"))
 			}
 		} else {
-			for _, value := range s.monthlyMode() {
-				fmt.Println(value.Unix())
+			for _, date := range s.monthlyMode() {
+				fmt.Println(date.Unix())
 			}
 		}
 	}
