@@ -12,7 +12,7 @@ type dateSeries struct {
 	end      time.Time
 	n        int
 	days     int
-	weekday  string
+	weekday  int
 	weekdayn int
 	months   int
 }
@@ -29,20 +29,10 @@ func endOfMonth(d time.Time) time.Time {
 
 // ===============================DATE=OF=WEEKDAY==============================
 
-func dateOfWeekday(date time.Time, weekday string, weekdayn int) time.Time {
-
-	weekdays := map[string]time.Weekday{
-		"Sun": time.Sunday,
-		"Mon": time.Monday,
-		"Tue": time.Tuesday,
-		"Wed": time.Wednesday,
-		"Thu": time.Thursday,
-		"Fri": time.Friday,
-		"Sat": time.Saturday,
-	}
+func dateOfWeekday(date time.Time, weekday int, weekdayn int) time.Time {
 
 	start := int(date.Weekday())
-	target := int(weekdays[weekday])
+	target := weekday
 
 	target += 7
 	diff := target - start
@@ -129,10 +119,8 @@ func (s dateSeries) monthlyMode() []time.Time {
 				date = date.AddDate(0, 1, 0)
 			}
 			mn = s.days
-		}
-
-		// -n -k
-		if s.weekday != "" {
+		} else {
+			// -n -k
 			if date.Day() > monthlyDate(date, s).Day() {
 				date = date.AddDate(0, 1, 0)
 			}
@@ -219,13 +207,23 @@ func main() {
 		*days = *weeks * 7
 	}
 
-	// Store data in dateSeries type
+	weekdays := map[string]time.Weekday{
+		"Sun": time.Sunday,
+		"Mon": time.Monday,
+		"Tue": time.Tuesday,
+		"Wed": time.Wednesday,
+		"Thu": time.Thursday,
+		"Fri": time.Friday,
+		"Sat": time.Saturday,
+	}
+
+	// Assign data to dateSeries type
 	s := dateSeries{
 		start:    startTime,
 		end:      endTime,
 		n:        *n,
 		days:     *days,
-		weekday:  *weekday,
+		weekday:  int(weekdays[*weekday]),
 		weekdayn: *weekdayn,
 		months:   *months,
 	}
