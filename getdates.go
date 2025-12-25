@@ -20,7 +20,8 @@ type dateSeries struct {
 
 // ================================END=OF=MONTH================================
 
-func endOfMonth(d time.Time) time.Time {
+func endOfMonth(d time.Time) time.Time
+{
 	year := d.Year()
 	month := d.Month() + 1
 	date := time.Date(year, month, 0, 0, 0, 0, 0, time.Local)
@@ -29,8 +30,8 @@ func endOfMonth(d time.Time) time.Time {
 
 // ===============================DATE=OF=WEEKDAY==============================
 
-func dateOfWeekday(date time.Time, weekday int, weekdayn int) time.Time {
-
+func dateOfWeekday(date time.Time, weekday int, weekdayn int) time.Time
+{
 	start := int(date.Weekday())
 
 	weekday += 7
@@ -48,18 +49,15 @@ func dateOfWeekday(date time.Time, weekday int, weekdayn int) time.Time {
 
 // =================================MONTHLY=DATE===============================
 
-func monthlyDate(date time.Time, s dateSeries) time.Time {
-
+func monthlyDate(date time.Time, s dateSeries) time.Time
+{
 	if s.days != 0 {
-
 		if s.days > 0 {
 			date = time.Date(date.Year(), date.Month(), s.days, 0, 0, 0, 0, time.Local)
 		} else {
 			date = endOfMonth(date).AddDate(0, 0, s.days+1)
 		}
-
 	} else {
-
 		if s.weekdayn > 0 {
 			date = time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local)
 		} else {
@@ -73,8 +71,8 @@ func monthlyDate(date time.Time, s dateSeries) time.Time {
 
 // ============================REFERENCE=DATE=MODE=============================
 
-func (s dateSeries) referenceDateMode() []time.Time {
-
+func (s dateSeries) referenceDateMode() []time.Time
+{
 	date := s.start
 	var dates []time.Time
 
@@ -97,8 +95,8 @@ func (s dateSeries) referenceDateMode() []time.Time {
 
 // ===============================MONTHLY=MODE=================================
 
-func (s dateSeries) monthlyMode() []time.Time {
-
+func (s dateSeries) monthlyMode() []time.Time
+{
 	date := s.start
 	var dates []time.Time
 	var mn int
@@ -154,8 +152,8 @@ func (s dateSeries) monthlyMode() []time.Time {
 
 // ==================================MAIN======================================
 
-func main() {
-
+func main()
+{
 	// Parse flags
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	start := flag.String("s", string(time.Now().Format(time.DateOnly)), "Start date")
