@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -195,14 +196,15 @@ func main() {
 		*days = *weeks * 7
 	}
 
+	*weekday = strings.ToLower(*weekday)
 	weekdays := map[string]time.Weekday{
-		"Sun": time.Sunday,
-		"Mon": time.Monday,
-		"Tue": time.Tuesday,
-		"Wed": time.Wednesday,
-		"Thu": time.Thursday,
-		"Fri": time.Friday,
-		"Sat": time.Saturday,
+		"sun": time.Sunday,
+		"mon": time.Monday,
+		"tue": time.Tuesday,
+		"wed": time.Wednesday,
+		"thu": time.Thursday,
+		"fri": time.Friday,
+		"sat": time.Saturday,
 	}
 
 	// Assign data to dateSeries type
