@@ -53,13 +53,17 @@ func monthlyDate(date time.Time, s dateSeries) time.Time
 {
 	if s.days != 0 {
 		if s.days > 0 {
-			date = time.Date(date.Year(), date.Month(), s.days, 0, 0, 0, 0, time.Local)
+			year := date.Year()
+			month := date.Month()
+			date = time.Date(year, month, s.days, 0, 0, 0, 0, time.Local)
 		} else {
 			date = endOfMonth(date).AddDate(0, 0, s.days+1)
 		}
 	} else {
 		if s.weekdayn > 0 {
-			date = time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local)
+			year := date.Year()
+			month := date.Month()
+			date = time.Date(year, month, 1, 0, 0, 0, 0, time.Local)
 		} else {
 			date = endOfMonth(date)
 		}
@@ -173,7 +177,7 @@ func main()
 	// Input validation
 	unitFlags := 0
 	endFlags := 0
-	flag.CommandLine.Visit(func(f *flag.Flag) {
+	flag.CommandLine.Visit(func (f *flag.Flag) {
 		switch f.Name {
 		case "d", "w", "k":
 			unitFlags++
