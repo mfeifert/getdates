@@ -79,14 +79,13 @@ func (s dateSeries) referenceDateMode() []time.Time {
 	date := s.start
 	var dates []time.Time
 
-	// Use -n or -e flag
 	if s.n != 0 {
 		// -n
 		for range s.n {
 			dates = append(dates, date)
 			date = date.AddDate(0, 0, s.days)
 		}
-	} else if s.end != s.start {
+	} else {
 		// -e
 		for date.Compare(s.end) < 1 {
 			dates = append(dates, date)
