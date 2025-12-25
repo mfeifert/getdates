@@ -41,13 +41,18 @@ func dateOfWeekday(date time.Time, weekday string, weekdayn int) time.Time {
 		"Sat": time.Saturday,
 	}
 
-	if weekdayn >= 0 {
-		diff := (int(weekdays[weekday]) - int(date.Weekday()) + 7) % 7
-		date = date.AddDate(0, 0, diff)
-	} else {
-		diff := (int(date.Weekday()) - int(weekdays[weekday]) + 7) % 7
-		date = date.AddDate(0, 0, -diff)
+	start := int(date.Weekday())
+	target := int(weekdays[weekday])
+
+	target += 7
+	diff := target - start
+	diff %= 7
+	if weekdayn > 0 {
+		weekdayn--
 	}
+	diff += 7 * weekdayn
+
+	date = date.AddDate(0, 0, diff)
 
 	return date
 }
@@ -68,13 +73,10 @@ func monthlyDate(date time.Time, s dateSeries) time.Time {
 
 		if s.weekdayn > 0 {
 			date = time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.Local)
-			date = dateOfWeekday(date, s.weekday, s.weekdayn)
-			date = date.AddDate(0, 0, (s.weekdayn-1)*7)
 		} else {
 			date = endOfMonth(date)
-			date = dateOfWeekday(date, s.weekday, s.weekdayn)
-			date = date.AddDate(0, 0, (s.weekdayn+1)*7)
 		}
+		date = dateOfWeekday(date, s.weekday, s.weekdayn)
 	}
 
 	return date
