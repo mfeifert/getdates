@@ -32,10 +32,9 @@ func endOfMonth(d time.Time) time.Time {
 func dateOfWeekday(date time.Time, weekday int, weekdayn int) time.Time {
 
 	start := int(date.Weekday())
-	target := weekday
 
-	target += 7
-	diff := target - start
+	weekday += 7
+	diff := weekday - start
 	diff %= 7
 	if weekdayn > 0 {
 		weekdayn--
