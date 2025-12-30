@@ -12,7 +12,7 @@ type dateSeries struct {
 	start    time.Time
 	end      time.Time
 	n        int
-	days     int
+	day      int
 	weekday  int
 	weekdayn int
 	months   int
@@ -50,13 +50,13 @@ func dateOfWeekday(date time.Time, weekday int, weekdayn int) time.Time {
 
 func monthlyDate(date time.Time, s dateSeries) time.Time {
 
-	if s.days != 0 {
-		if s.days > 0 {
+	if s.day != 0 {
+		if s.day > 0 {
 			year := date.Year()
 			month := date.Month()
-			date = time.Date(year, month, s.days, 0, 0, 0, 0, time.Local)
+			date = time.Date(year, month, s.day, 0, 0, 0, 0, time.Local)
 		} else {
-			date = endOfMonth(date).AddDate(0, 0, s.days+1)
+			date = endOfMonth(date).AddDate(0, 0, s.day+1)
 		}
 	} else {
 		if s.weekdayn > 0 {
@@ -83,13 +83,13 @@ func (s dateSeries) referenceDateMode() []time.Time {
 		// -n
 		for range s.n {
 			dates = append(dates, date)
-			date = date.AddDate(0, 0, s.days)
+			date = date.AddDate(0, 0, s.day)
 		}
 	} else {
 		// -e
 		for date.Compare(s.end) < 1 {
 			dates = append(dates, date)
-			date = date.AddDate(0, 0, s.days)
+			date = date.AddDate(0, 0, s.day)
 		}
 	}
 
@@ -106,11 +106,11 @@ func (s dateSeries) monthlyMode() []time.Time {
 
 	if s.n != 0 {
 		// -n
-		if s.days > 0 && date.Day() > s.days {
+		if s.day > 0 && date.Day() > s.day {
 			// -d positive
 			date = date.AddDate(0, 1, 0)
 			mn = 1
-		} else if s.days < 0 && date.Day() > endOfMonth(date).AddDate(0, 0, s.days).Day() {
+		} else if s.day < 0 && date.Day() > endOfMonth(date).AddDate(0, 0, s.day).Day() {
 			// -d negative
 			date = date.AddDate(0, 1, 0)
 			mn = -1
@@ -156,7 +156,7 @@ func main() {
 	start := flag.String("s", string(time.Now().Format(time.DateOnly)), "Start date")
 	end := flag.String("e", *start, "End date")
 	n := flag.Int("n", 0, "Number of repetitions")
-	days := flag.Int("d", 0, "Days")
+	day := flag.Int("d", 0, "Days")
 	weeks := flag.Int("w", 0, "Weeks")
 	weekday := flag.String("k", "", "Weekday")
 	weekdayn := flag.Int("kn", 0, "Weekday number")
@@ -188,7 +188,7 @@ func main() {
 		os.Exit(1)
 	}
 	if *weeks != 0 {
-		*days = *weeks * 7
+		*day = *weeks * 7
 	}
 
 	*weekday = strings.ToLower(*weekday)
@@ -207,7 +207,7 @@ func main() {
 		start:    startTime,
 		end:      endTime,
 		n:        *n,
-		days:     *days,
+		day:      *day,
 		weekday:  int(weekdays[*weekday]),
 		weekdayn: *weekdayn,
 		months:   *months,
