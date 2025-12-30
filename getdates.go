@@ -101,19 +101,20 @@ func (s dateSeries) referenceDateMode() []time.Time {
 func (s dateSeries) monthlyMode() []time.Time {
 
 	date := s.start
+	day := s.day
 	var dates []time.Time
 	var mn int
 
 	if s.n != 0 {
 		// -n
-		if s.day > 0 {
-			if date.Day() > s.day {
+		if day > 0 {
+			if date.Day() > day {
 				// -d positive
 				date = date.AddDate(0, 1, 0)
 				mn = 1
 			}
-		} else if s.day < 0 {
-			if date.Day() > endOfMonth(date).AddDate(0, 0, s.day).Day() {
+		} else if day < 0 {
+			if date.Day() > endOfMonth(date).AddDate(0, 0, day).Day() {
 				// -d negative
 				date = date.AddDate(0, 1, 0)
 				mn = -1
